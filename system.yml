@@ -92,6 +92,12 @@
       loop_control:
         loop_var: role_name
 
+    - name: Add user to docker group
+      ansible.builtin.user:
+        append: true
+        groups: docker
+        name: phillip
+
     - name: Install autofs
       aur:
         name: "{{ item }}"
