@@ -138,6 +138,11 @@
         option: IgnorePkg
         section: options
         value: systemd systemd-libs systemd-resolvconf systemd-sysvcompat
+    - name: Disable mounting /tmp as tmpfs
+      ansible.builtin.systemd:
+        enabled: false
+        masked: true
+        name: tmp.mount
 
   handlers:
     - name: update grub
