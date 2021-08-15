@@ -14,17 +14,19 @@
     - name: Install tools
       community.general.pacman:
         state: latest
-        name: [firefox, feh, htop, nmon, vim, udisks2, udiskie]
+        name: [firefox, feh, htop, nmon, vim, udisks2, udiskie, ssh-audit]
 
     - name: Install ansible tools (pacman)
       community.general.pacman:
         state: latest
         name: [python3, ansible, ansible-lint, flake8, yamllint]
 
+    # Using pip for these to prevent file conflicts between pip docker and pacman docker
     - name: Install ansible tools (pip)
       ansible.builtin.pip:
         name: [pytest, pytest-testinfra, molecule, 'molecule[ansible,docker,lint]']
 
+    # I do not want to look at a black screen
     - name: Disable quiet boot
       ansible.builtin.replace:
         backup: true
@@ -33,6 +35,7 @@
         replace: '\1\2\4\5'
       notify: update grub
 
+    # Was hoping this would allow me to control the annoying fan of my HD5750
     - name: Enable radeon overclocking features
       ansible.builtin.replace:
         backup: true
@@ -41,6 +44,7 @@
         replace: '\1\2 amdgpu.ppfeaturemask=0xffffffff\3'
       notify: upgrade grub
 
+    # Hoping this would stop the fan from going up & down all the time (hint: nope)
     - name: Copy low power profile
       ansible.builtin.copy:
         src: 30-radeon-pm.rules
@@ -48,6 +52,7 @@
         owner: root
         group: root
         mode: '0755'
+
     - name: Common
       ansible.builtin.include_role:
         name: robertdebock.common
@@ -98,6 +103,7 @@
         groups: docker
         name: phillip
 
+    # Not using it but can't hurt
     - name: Install autofs
       aur:
         name: "{{ item }}"
@@ -108,6 +114,7 @@
         - autofs
         - downgrade
 
+    # My systemd-docker images don't run with systemd v248
     - name: Get systemd version   # noqa command-instead-of-module
       ansible.builtin.command:
         cmd: 'systemctl --version'
