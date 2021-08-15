@@ -2,7 +2,7 @@
 
 This is a playbook to setup my personal desktop runing Manjaro i3.
 
-That's about it, there's nothing more to see here ¯\_(ツ)_/¯
+That's about it, there's nothing more to see here ¯\\_(ツ)_/¯
 
 
 ## Running the playbook
