@@ -1,4 +1,4 @@
-desktop-ansible
+# desktop-ansible
 
 This is a playbook to setup my personal desktop runing Manjaro i3.
 
