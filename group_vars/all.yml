@@ -1,0 +1,36 @@
+# robertdebock.common
+common_nameservers:
+  - 208.67.222.222
+  - 1.1.1.1
+common_hostname: PWManjaro
+common_hosts: "{{ groups.all }}"
+
+git_username: phillip
+git_user_email: p_w999@ymail.com
+git_user_name: Phillip
+
+openssh_permit_root_login: "no"
+openssh_strict_modes: "yes"
+openssh_permit_empty_passwords: "no"
+openssh_password_authentication: "no"
+openssh_pub_key_authentication: "yes"
+openssh_allow_users:
+  - phillip
+
+users_group_list:
+  - name: aur_builder
+    gid: 1111
+users_user_list:
+  - name: aur_builder
+    cron_allow: false
+    comment: AUR package builder
+    uid: 1111
+    group: aur_builder
+    system: true
+    sudo_options:
+      - 'ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+  - name: phillip
+    manage_ssh_key: true
+    cron_allow: true
+    comment: Phillip
+    copy_private_key: true

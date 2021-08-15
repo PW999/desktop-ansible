@@ -1,0 +1,10 @@
+---
+roles: 
+  - name: robertdebock.common
+  - name: robertdebock.docker
+  - name: robertdebock.docker_compose
+  - name: robertdebock.git
+  - name: robertdebock.openssh
+  - name: robertdebock.virtualbox
+  - name: robertdebock.users
+  - name: kewlfft.aur

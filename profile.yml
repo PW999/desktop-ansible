@@ -1,0 +1,105 @@
+---
+- name: Configure profile
+  hosts: all
+  become: false
+  tasks:
+    - name: Use alt key as modifier
+      ansible.builtin.lineinfile:
+        search_string: "set $mod Mod4"
+        path: ~/.i3/config
+        line: "set $mod Mod1"
+      notify: reload i3
+
+    - name: Download wallpaper
+      ansible.builtin.get_url:
+        url: https://images.pexels.com/photos/2835436/pexels-photo-2835436.jpeg?cs=srgb&dl=pexels-francesco-ungaro-2835436.jpg&fm=jpg   # noqa line-length
+        dest: ~/Pictures/wallpaper.jpg
+        mode: '0744'
+        owner: phillip
+        group: phillip
+      register: wallpaper
+
+    - name: Configure wallpaper
+      ansible.builtin.lineinfile:
+        path: ~/.xinitrc
+        firstmatch: true
+        insertbefore: 'get_session\(\)\{'
+        line: feh --bg-scale /home/phillip/Pictures/wallpaper.jpg
+        state: present
+
+    - name: Set wallpaper   # noqa no-handler
+      ansible.builtin.command:
+        cmd: feh --bg-scale ~/Pictures/wallpaper.jpg
+      when: wallpaper.changed
+
+    - name: load udiskie
+      ansible.builtin.lineinfile:
+        path: ~/.xinitrc
+        insertafter: EOF
+        line: "udiskie &"
+      register: udiskie
+
+    - name: Start udiskie if needed   # noqa no-handler
+      ansible.builtin.command:
+        cmd: "udiskie &"
+      when: udiskie.changed
+
+    - name: Enable fake transparency in terminal
+      ansible.builtin.lineinfile:
+        path: ~/.Xresources
+        line: '{{ item.line }}'
+        regexp: '{{ item.regex }}'
+        state: present
+        backup: true
+      notify: xrdb reload
+      loop:
+        - {regex: "(! )?URxvt\\*inheritPixmap:.*", line: "URxvt*inheritPixmap:            true"}
+        - {regex: "(! )?URxvt\\*transparent:.*", line: "URxvt*transparent:              true"}
+        - {regex: "(! )?URxvt\\*shading:.*", line: "URxvt*shading:                  24"}
+
+    - name: Create i3status dir
+      ansible.builtin.file:
+        state: directory
+        path: ~/.config/i3status
+        owner: phillip
+        group: phillip
+        mode: '0744'
+
+    - name: Configure i3status files
+      ansible.builtin.copy:
+        src: i3status.conf
+        dest: ~/.config/i3status/config
+        owner: phillip
+        group: phillip
+        mode: '0744'
+      notify: restart i3
+
+    - name: Create bash alias file
+      ansible.builtin.lineinfile:
+        path: ~/.bash_alias
+        line: "{{ item }}"
+        create: true
+        owner: phillip
+        group: phillip
+        mode: '0744'
+      loop:
+        - "alias ll='ls -alh --color=auto'"
+
+    - name: Link alias file
+      ansible.builtin.lineinfile:
+        path: ~/.bashrc
+        insertafter: EOF
+        line: "source $HOME/.bash_alias"
+
+  handlers:
+    - name: reload i3
+      ansible.builtin.command:
+        cmd: i3-msg reload
+
+    - name: restart i3
+      ansible.builtin.command:
+        cmd: i3-msg restart
+
+    - name: xrdb reload
+      ansible.builtin.command:
+        cmd: xrdb ~/.Xresources
