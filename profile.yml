@@ -21,28 +21,29 @@
 
     - name: Configure wallpaper
       ansible.builtin.lineinfile:
-        path: ~/.xinitrc
+        path: ~/.i3/config
         firstmatch: true
-        insertbefore: 'get_session\(\)\{'
-        line: feh --bg-scale /home/phillip/Pictures/wallpaper.jpg
+        insertafter: '# Autostart applications'
+        line: exec --no-startup-id feh --bg-scale /home/phillip/Pictures/wallpaper.jpg
         state: present
+      notify: restart i3
 
-    - name: Set wallpaper   # noqa no-handler
-      ansible.builtin.command:
-        cmd: feh --bg-scale ~/Pictures/wallpaper.jpg
-      when: wallpaper.changed
+        #    - name: Set wallpaper   # noqa no-handler
+        #      ansible.builtin.command:
+        #        cmd: feh --bg-scale ~/Pictures/wallpaper.jpg
+        #      when: wallpaper.changed
 
     - name: load udiskie
       ansible.builtin.lineinfile:
-        path: ~/.xinitrc
-        insertafter: EOF
-        line: "udiskie &"
-      register: udiskie
+        path: ~/.i3/config
+        insertafter: '# Autostart applications'
+        line: exec --no-startup-id udiskie
+      notify: restart i3
 
-    - name: Start udiskie if needed   # noqa no-handler
-      ansible.builtin.command:
-        cmd: "udiskie &"
-      when: udiskie.changed
+        #    - name: Start udiskie if needed   # noqa no-handler
+        #      ansible.builtin.command:
+        #        cmd: "udiskie &"
+        #      when: udiskie.changed
 
     - name: Enable fake transparency in terminal
       ansible.builtin.lineinfile:
