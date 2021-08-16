@@ -78,6 +78,9 @@
         mode: '0744'
       loop:
         - "alias ll='ls -alh --color=auto'"
+        - "alias gst='git status'"
+        - "alias gcmsg='git commit -m '"
+        - "alias gaa='git add --all'"
 
     - name: Link alias file
       ansible.builtin.lineinfile:
