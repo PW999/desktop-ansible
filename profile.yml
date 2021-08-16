@@ -25,25 +25,18 @@
         firstmatch: true
         insertafter: '# Autostart applications'
         line: exec --no-startup-id feh --bg-scale /home/phillip/Pictures/wallpaper.jpg
+        search_string: feh --bg-scale
         state: present
       notify: restart i3
-
-        #    - name: Set wallpaper   # noqa no-handler
-        #      ansible.builtin.command:
-        #        cmd: feh --bg-scale ~/Pictures/wallpaper.jpg
-        #      when: wallpaper.changed
 
     - name: load udiskie
       ansible.builtin.lineinfile:
         path: ~/.i3/config
         insertafter: '# Autostart applications'
         line: exec --no-startup-id udiskie
+        state: present
+        search_string: udiskie
       notify: restart i3
-
-        #    - name: Start udiskie if needed   # noqa no-handler
-        #      ansible.builtin.command:
-        #        cmd: "udiskie &"
-        #      when: udiskie.changed
 
     - name: Enable fake transparency in terminal
       ansible.builtin.lineinfile:
