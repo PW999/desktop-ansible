@@ -19,6 +19,12 @@
         group: phillip
       register: wallpaper
 
+    - name: Disable nitrogen in favor of feh
+      ansible.builtin.replace:
+        path: ~/.i3/config
+        regexp: ^(exec)(.*)(nitrogen)(.*)$
+        replace: '# \1\2\3\4'
+      
     - name: Configure wallpaper
       ansible.builtin.lineinfile:
         path: ~/.i3/config
