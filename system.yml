@@ -3,8 +3,6 @@
   hosts: all
   become: true
   become_user: root
-  roles:
-    - kewlfft.aur
   tasks:
     - name: Upgrade system
       community.general.pacman:
@@ -42,7 +40,7 @@
         path: /etc/default/grub
         regexp: '(GRUB_CMDLINE_LINUX_DEFAULT=")(?!.*? amdgpu.ppfeaturemask=0xffffffff)(.*)(")'
         replace: '\1\2 amdgpu.ppfeaturemask=0xffffffff\3'
-      notify: upgrade grub
+      notify: update grub
 
     # Hoping this would stop the fan from going up & down all the time (hint: nope)
     - name: Copy low power profile
@@ -105,7 +103,7 @@
 
     # Not using it but can't hurt
     - name: Install autofs
-      aur:
+      kewlfft.aur.aur:
         name: "{{ item }}"
         state: present
       become: true
