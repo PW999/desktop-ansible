@@ -122,7 +122,7 @@
     - name: Downgrade systemd
       ansible.builtin.shell:
         cmd: 'yes | DOWNGRADE_FROM_ALA=1 downgrade "{{ item }}==247.4-1" --ala-only'
-      when: "'248' in systemd.stdout"
+      when: "'247' not in systemd.stdout"
       loop:
         - systemd
         - systemd-libs
