@@ -12,7 +12,7 @@
     - name: Install tools
       community.general.pacman:
         state: latest
-        name: [firefox, feh, htop, nmon, vim, udisks2, udiskie, ssh-audit]
+        name: [firefox, feh, htop, nmon, vim, udisks2, udiskie, ssh-audit, libreoffice-fresh, libreoffice-fresh-nl, galculator, vagrant]
 
     - name: Install ansible tools (pacman)
       community.general.pacman:
